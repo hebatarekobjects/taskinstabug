@@ -1,0 +1,612 @@
+{
+    "swagger":"2.0",
+    "info":{
+       "description":"Instabug Task (chat system).",
+       "version":"1.0.0",
+       "title":"Instabug Task (chat system)",
+       "termsOfService":"http://localhost:3001",
+       "contact":{
+          "email":"heba.ta.ahmed@gmail.com"
+       },
+       "license":{
+          "name":"Apache 2.0",
+          "url":"http://www.apache.org/licenses/LICENSE-2.0.html"
+       }
+    },
+    "host":"localhost:3001",
+    "basePath":"/api/v1",
+    "tags":[
+       {
+          "name":"application",
+          "description":"Application Manager that contains it's APIs"
+       },
+       {
+          "name":"chat",
+          "description":"Chat Manager that contains it's APIs"
+       },
+       {
+          "name":"message",
+          "description":"Message Manager that contains it's APIs"
+       }
+    ],
+    "schemes":[
+       "http"
+    ],
+    "paths":{
+       "/application":{
+           "get":{
+            "tags":[
+                "application"
+             ],
+             "summary":"List all applications in the system",
+             "description":"",
+             "operationId":"list",
+             "consumes":[
+                "application/json"
+             ],
+             "produces":[
+                "application/json"
+             ],
+             "parameters":[
+                {
+                   "in":"query",
+                   "name":"page",
+                   "description":"application pagination",
+                   "required":true,
+                   "type": "integer",
+                   "format": "int32",
+                   "default" : 1
+                }
+             ],
+             "responses":{
+                "200":{
+                    "description":"successful operation"
+                 },
+                "405":{
+                   "description":"Invalid input"
+                }
+             }
+           },
+          "post":{
+             "tags":[
+                "application"
+             ],
+             "summary":"Add a new application to the chat system",
+             "description":"",
+             "operationId":"new",
+             "consumes":[
+                "application/json"
+             ],
+             "produces":[
+                "application/json"
+             ],
+             "parameters":[
+                {
+                   "in":"body",
+                   "name":"body",
+                   "description":"application object that needs to be added to the chat system",
+                   "required":true,
+                   "schema":{
+                      "$ref":"#/definitions/application"
+                   }
+                }
+             ],
+             "responses":{
+                "200":{
+                    "description":"successful operation"
+                 },
+                "405":{
+                   "description":"Invalid input"
+                }
+             }
+          }
+       },
+       "/application/{token}":{
+          "get":{
+             "tags":[
+                "application"
+             ],
+             "summary":"Find application by token",
+             "description":"Returns a single application",
+             "operationId":"show",
+             "produces":[
+                "application/json"
+             ],
+             "parameters":[
+                {
+                   "name":"token",
+                   "in":"path",
+                   "description":"token of application to return",
+                   "required":true,
+                   "type":"string"
+                }
+             ],
+             "responses":{
+                "200":{
+                   "description":"successful operation"
+                },
+                "400":{
+                   "description":"Invalid token supplied"
+                },
+                "404":{
+                   "description":"application not found"
+                }
+             }
+          },
+          "put":{
+             "tags":[
+                "application"
+             ],
+             "summary":"Updates a application in the chat system",
+             "description":"",
+             "operationId":"edit",
+             "consumes":[
+                "application/json"
+             ],
+             "produces":[
+                "application/json"
+             ],
+             "parameters":[
+                {
+                    "name":"token",
+                    "in":"path",
+                    "description":"token of application to return",
+                    "required":true,
+                    "type":"string"
+                 },
+                {
+                   "in":"body",
+                   "name":"body",
+                   "description":"application object that needs to be updated to the chat system",
+                   "required":true,
+                   "schema":{
+                      "$ref":"#/definitions/application"
+                   }
+                }
+             ],
+             "responses":{
+                "200":{
+                    "description":"successful operation"
+                 },
+                "405":{
+                   "description":"Invalid input"
+                },
+                "400":{
+                    "description":"Invalid token supplied"
+                 },
+                 "404":{
+                    "description":"application not found"
+                 }
+             }
+          },
+          "delete":{
+             "tags":[
+                "application"
+             ],
+             "summary":"Deletes an application",
+             "description":"",
+             "operationId":"destroy",
+             "produces":[
+                "application/json"
+             ],
+             "parameters":[
+                {
+                    "name":"token",
+                    "in":"path",
+                    "description":"token of application to return",
+                    "required":true,
+                    "type":"string"
+                 }
+             ],
+             "responses":{
+                 "200":{
+                    "description":"application deleted"
+                 },
+                "400":{
+                   "description":"Invalid ID supplied"
+                },
+                "404":{
+                   "description":"Pet not found"
+                }
+             }
+          }
+       },
+       "/message":{
+        "get":{
+         "tags":[
+             "message"
+          ],
+          "summary":"List all messages in the chat",
+          "description":"",
+          "operationId":"list",
+          "consumes":[
+             "application/json"
+          ],
+          "produces":[
+             "application/json"
+          ],
+          "parameters":[
+            {
+                "in":"query",
+                "name":"chat_token",
+                "description":"chat token",
+                "required":true,
+                "type": "string"
+             },
+             {
+                "in":"query",
+                "name":"search_query",
+                "description":"search query",
+                "required":false,
+                "type": "string"
+             },
+             {
+                "in":"query",
+                "name":"page",
+                "description":"application pagination",
+                "required":true,
+                "type": "integer",
+                "format": "int32",
+                "default" : 1
+             }
+             
+          ],
+          "responses":{
+             "200":{
+                 "description":"successful operation"
+              },
+             "405":{
+                "description":"Invalid input"
+             }
+          }
+        },
+       "post":{
+          "tags":[
+             "message"
+          ],
+          "summary":"Add a new message to the chat system",
+          "description":"",
+          "operationId":"new",
+          "consumes":[
+             "application/json"
+          ],
+          "produces":[
+             "application/json"
+          ],
+          "parameters":[
+             {
+                "in":"body",
+                "name":"body",
+                "description":"message object that needs to be added to the chat system",
+                "required":true,
+                "schema":{
+                   "$ref":"#/definitions/message"
+                }
+             }
+          ],
+          "responses":{
+             "200":{
+                 "description":"successful operation"
+              },
+             "405":{
+                "description":"Invalid input"
+             }
+          }
+       }
+    },
+    "/message/{token}":{
+       "get":{
+          "tags":[
+             "message"
+          ],
+          "summary":"Find message by token",
+          "description":"Returns a single message",
+          "operationId":"show",
+          "produces":[
+             "application/json"
+          ],
+          "parameters":[
+             {
+                "name":"token",
+                "in":"path",
+                "description":"token of message to return",
+                "required":true,
+                "type":"string"
+             }
+          ],
+          "responses":{
+             "200":{
+                "description":"successful operation"
+             },
+             "400":{
+                "description":"Invalid token supplied"
+             },
+             "404":{
+                "description":"application not found"
+             }
+          }
+       },
+       "put":{
+          "tags":[
+             "message"
+          ],
+          "summary":"Updates a message in the chat system",
+          "description":"",
+          "operationId":"edit",
+          "consumes":[
+             "application/json"
+          ],
+          "produces":[
+             "application/json"
+          ],
+          "parameters":[
+             {
+                 "name":"token",
+                 "in":"path",
+                 "description":"token of message to return",
+                 "required":true,
+                 "type":"string"
+              },
+             {
+                "in":"body",
+                "name":"body",
+                "description":"message object that needs to be updated to the chat system",
+                "required":true,
+                "schema":{
+                   "$ref":"#/definitions/message"
+                }
+             }
+          ],
+          "responses":{
+             "200":{
+                 "description":"successful operation"
+              },
+             "405":{
+                "description":"Invalid input"
+             },
+             "400":{
+                 "description":"Invalid token supplied"
+              },
+              "404":{
+                 "description":"application not found"
+              }
+          }
+       },
+       "delete":{
+          "tags":[
+             "message"
+          ],
+          "summary":"Deletes an message",
+          "description":"",
+          "operationId":"destroy",
+          "produces":[
+             "application/json"
+          ],
+          "parameters":[
+            {
+                "name":"token",
+                "in":"path",
+                "description":"token of message to return",
+                "required":true,
+                "type":"string"
+             }
+          ],
+          "responses":{
+              "200":{
+                 "description":"message deleted"
+              },
+             "400":{
+                "description":"Invalid ID supplied"
+             },
+             "404":{
+                "description":"message not found"
+             }
+          }
+       }
+    },
+       
+    "/chat":{
+        "get":{
+         "tags":[
+             "chat"
+          ],
+          "summary":"List all chat in the chat",
+          "description":"",
+          "operationId":"list",
+          "consumes":[
+             "application/json"
+          ],
+          "produces":[
+             "application/json"
+          ],
+          "parameters":[
+             
+             {
+                "in":"query",
+                "name":"application_token",
+                "description":"application token",
+                "required":true,
+                "type": "string"
+             },
+             {
+                "in":"query",
+                "name":"page",
+                "description":"chat pagination",
+                "required":true,
+                "type": "integer",
+                "format": "int32",
+                "default" : 1
+             }
+          ],
+          "responses":{
+             "200":{
+                 "description":"successful operation"
+              },
+             "405":{
+                "description":"Invalid input"
+             }
+          }
+        },
+       "post":{
+          "tags":[
+             "chat"
+          ],
+          "summary":"Add a new chat to the chat system",
+          "description":"",
+          "operationId":"new",
+          "consumes":[
+             "application/json"
+          ],
+          "produces":[
+             "application/json"
+          ],
+          "parameters":[
+             {
+                "in":"body",
+                "name":"body",
+                "description":"chat object that needs to be added to the chat system",
+                "required":true,
+                "schema":{
+                   "$ref":"#/definitions/chat"
+                }
+             }
+          ],
+          "responses":{
+             "200":{
+                 "description":"successful operation"
+              },
+             "405":{
+                "description":"Invalid input"
+             }
+          }
+       }
+    },
+    "/chat/{token}":{
+       "get":{
+          "tags":[
+             "chat"
+          ],
+          "summary":"Find message by token",
+          "description":"Returns a single chat",
+          "operationId":"show",
+          "produces":[
+             "application/json"
+          ],
+          "parameters":[
+             {
+                "name":"token",
+                "in":"path",
+                "description":"token of chat to return",
+                "required":true,
+                "type":"string"
+             }
+          ],
+          "responses":{
+             "200":{
+                "description":"successful operation"
+             },
+             "400":{
+                "description":"Invalid token supplied"
+             },
+             "404":{
+                "description":"chat not found"
+             }
+          }
+       },
+       "delete":{
+          "tags":[
+             "chat"
+          ],
+          "summary":"Deletes a chat",
+          "description":"",
+          "operationId":"destroy",
+          "produces":[
+             "application/json"
+          ],
+          "parameters":[
+            {
+                "name":"token",
+                "in":"path",
+                "description":"token of chat to be deleted",
+                "required":true,
+                "type":"string"
+             }
+          ],
+          "responses":{
+              "200":{
+                 "description":"chat deleted"
+              },
+             "400":{
+                "description":"Invalid Token supplied"
+             },
+             "404":{
+                "description":"chat not found"
+             }
+          }
+       }
+    }
+
+    },
+    "definitions":{
+        "application":{
+            "type":"object",
+            "properties":{
+               "client_name":{
+                    "type":"string"
+                }
+            },
+            "xml":{
+               "name":"application"
+            }
+         },
+         "chat":{
+            "type":"object",
+            "properties":{
+                "sender_token":{
+                    "type":"string",
+                    "description": "this is sender application token"
+                },
+                "receiver_token":{
+                    "type":"string",
+                    "description": "this is receiver application token"
+                },
+                "application_token":{
+                    "type":"string",
+                    "description": "this is application token"
+                }
+            },
+            "xml":{
+               "name":"chat"
+            }
+         },
+         "message":{
+            "type":"object",
+            "properties":{
+               "body":{
+                    "type":"string",
+                    "description": "this is message body"
+                },
+                "sender_token":{
+                    "type":"string",
+                    "description": "this is sender application token"
+                },
+                "receiver_token":{
+                    "type":"string",
+                    "description": "this is receiver application token"
+                },
+                "chat_token":{
+                    "type":"string",
+                    "description": "this is chat token"
+                }
+            },
+            "xml":{
+               "name":"message"
+            }
+         },
+
+    },
+    "externalDocs":{
+       "description":"Find out more about Swagger",
+       "url":"http://localhost:3001"
+    }
+ }

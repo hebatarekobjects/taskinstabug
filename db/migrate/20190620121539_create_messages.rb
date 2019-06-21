@@ -6,6 +6,7 @@ class CreateMessages < ActiveRecord::Migration[5.2]
       t.integer :receiver_id, :null=>false
       t.string :token, :null=>false
       t.text :message, :null=>false
+      t.timestamp :deleted_at, :null=>true
       t.timestamps
     end
     add_index :messages, :chat_id

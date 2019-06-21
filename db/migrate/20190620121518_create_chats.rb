@@ -5,6 +5,7 @@ class CreateChats < ActiveRecord::Migration[5.2]
       t.integer :application_receiver_id, :null=>false
       t.integer :message_count, :null=>false, :default=>0
       t.string :token, :null=>false
+      t.timestamp :deleted_at, :null=>true
       t.timestamps
     end
     add_index :chats, :application_intiator_id

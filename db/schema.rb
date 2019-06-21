@@ -16,6 +16,7 @@ ActiveRecord::Schema.define(version: 2019_06_20_121539) do
     t.integer "chat_count", default: 0, null: false
     t.string "client_name", null: false
     t.string "token", null: false
+    t.timestamp "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -25,6 +26,7 @@ ActiveRecord::Schema.define(version: 2019_06_20_121539) do
     t.integer "application_receiver_id", null: false
     t.integer "message_count", default: 0, null: false
     t.string "token", null: false
+    t.timestamp "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["application_intiator_id"], name: "index_chats_on_application_intiator_id"
@@ -37,6 +39,7 @@ ActiveRecord::Schema.define(version: 2019_06_20_121539) do
     t.integer "receiver_id", null: false
     t.string "token", null: false
     t.text "message", null: false
+    t.timestamp "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["chat_id"], name: "index_messages_on_chat_id"
