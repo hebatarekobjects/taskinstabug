@@ -5,11 +5,11 @@ class Api::V1::ChatsController < ApplicationController
     include Api::V1::ChatsHelper
 
     def list
-        @application = application.where({:token=>params[:application_token]}).first
+        @application = Application.where({:token=>params[:application_token]}).first
         if !@application.nil?
+            puts @application.inspect
             where = "chats.deleted_at is ? and (chats.application_intiator_id=? or chats.application_receiver_id=?)"
-            @chats = Chat.where(where,nil,@application.id,@application.id)
-            @chats = @chats.paginate(page: params[:page], per_page: 10).order("chats.created_at DESC")
+            @chats = Chat.where(where,nil,@application.id,@application.id).paginate(page: params[:page], per_page: 10).order("chats.created_at DESC")
             render json: format_list_response(@chats), :status=>200
         else
             render json: format_not_found_response, :status=>404
@@ -22,7 +22,7 @@ class Api::V1::ChatsController < ApplicationController
         else
             @chat = Chat.where({:token=>params[:id],:deleted_at => nil}).first
             if @chat.nil?
-                render json: format_not_found_response, :status=>404
+                render json: format_chat_not_found_response, :status=>404
             else
                 render json: format_show_response(@chat), :status=>200
             end
@@ -34,10 +34,10 @@ class Api::V1::ChatsController < ApplicationController
             render json: format_invalid_input_response, :status=>405
         else
             data = {
-                :token=>params[:token],
+                :token=>params[:id],
                 :action=>"destroy"
             }
-            ChatQueue.perform_later data
+            ChatQueueJob.perform_later data
             sleep 2
             render json: format_delete_response, :status=>200
         end

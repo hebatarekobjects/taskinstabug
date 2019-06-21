@@ -35,6 +35,14 @@ module Api::V1::ChatsHelper
         }
     end
 
+    def format_chat_not_found_response
+        return {
+            :code  => 404,
+            :status =>false,
+            :message => "chat is not found",
+        }
+    end
+
     def format_show_response(chat)
         return {
             :code  => 200,
@@ -63,25 +71,8 @@ module Api::V1::ChatsHelper
         return {
             :code  => 200,
             :status =>true,
-            :message => "application is added to delete quque successfully",
+            :message => "chat is added to delete quque successfully",
         }
-    end
-
-    def perform_delete_process params
-        @chat = chat.where({:token=>params[:id],:deleted_at => nil}).first
-        if !@chat.nil?
-            @chat.update_attributes({:deleted_at=>Time.now})
-            @intiator = @chat.application_intiator
-            intiator_chat_count = @intiator.chat_count
-            @intiator.update_attributes({:chat_count=>(intiator_chat_count-1)})
-            @receiver = @chat.application_receiver
-            receiver_chat_count = @receiver.chat_count
-            @receiver.update_attributes({:chat_count=>(receiver_chat_count-1)})
-            @messages = @chat.messages
-            @messages.each { |m|
-                m.update_attributes({:deleted_at=>Time.now})
-            }
-        end
     end
 
     def format_create_response

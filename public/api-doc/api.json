@@ -326,52 +326,6 @@
              }
           }
        },
-       "put":{
-          "tags":[
-             "message"
-          ],
-          "summary":"Updates a message in the chat system",
-          "description":"",
-          "operationId":"edit",
-          "consumes":[
-             "application/json"
-          ],
-          "produces":[
-             "application/json"
-          ],
-          "parameters":[
-             {
-                 "name":"token",
-                 "in":"path",
-                 "description":"token of message to return",
-                 "required":true,
-                 "type":"string"
-              },
-             {
-                "in":"body",
-                "name":"body",
-                "description":"message object that needs to be updated to the chat system",
-                "required":true,
-                "schema":{
-                   "$ref":"#/definitions/message"
-                }
-             }
-          ],
-          "responses":{
-             "200":{
-                 "description":"successful operation"
-              },
-             "405":{
-                "description":"Invalid input"
-             },
-             "400":{
-                 "description":"Invalid token supplied"
-              },
-              "404":{
-                 "description":"application not found"
-              }
-          }
-       },
        "delete":{
           "tags":[
              "message"

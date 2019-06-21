@@ -27,7 +27,7 @@ class Chat < ApplicationRecord
     end
 
     def self.perform_delete params
-        @chat = chat.where({:token=>params[:id],:deleted_at => nil}).first
+        @chat = self.where({:token=>params[:token],:deleted_at => nil}).first
         if !@chat.nil?
             @chat.deleted_at=Time.now
             @chat.save!
