@@ -6,10 +6,12 @@ class Api::V1::ChatsController < ApplicationController
 
     def list
         @application = Application.where({:token=>params[:application_token]}).first
+        page = ((!params.has_key?:page) || params[:page].blank? || params[:page].to_s=="0")? 1 : params[:page]
+
         if !@application.nil?
             puts @application.inspect
             where = "chats.deleted_at is ? and (chats.application_intiator_id=? or chats.application_receiver_id=?)"
-            @chats = Chat.where(where,nil,@application.id,@application.id).paginate(page: params[:page], per_page: 10).order("chats.created_at DESC")
+            @chats = Chat.where(where,nil,@application.id,@application.id).paginate(page: page, per_page: 10).order("chats.created_at DESC")
             render json: format_list_response(@chats), :status=>200
         else
             render json: format_not_found_response, :status=>404
@@ -17,7 +19,7 @@ class Api::V1::ChatsController < ApplicationController
     end
 
     def show
-        if !params.has_key? :id 
+        if ((!params.has_key? :id) || params[:id].blank?)
             render json: format_invalid_input_response, :status=>405
         else
             @chat = Chat.where({:token=>params[:id],:deleted_at => nil}).first
@@ -30,7 +32,7 @@ class Api::V1::ChatsController < ApplicationController
     end
 
     def destroy
-        if !params.has_key? :id 
+        if ((!params.has_key? :id) || params[:id].blank?)
             render json: format_invalid_input_response, :status=>405
         else
             data = {
@@ -44,9 +46,9 @@ class Api::V1::ChatsController < ApplicationController
     end
 
     def new
-        if !params.has_key? :sender_token
+        if ((!params.has_key? :sender_token) || params[:sender_token].blank?)
             render json: format_invalid_input_response, :status=>405
-        elsif !params.has_key? :receiver_token
+        elsif ((!params.has_key? :receiver_token) || params[:receiver_token].blank?)
             render json: format_invalid_input_response, :status=>405
         else
             data = {

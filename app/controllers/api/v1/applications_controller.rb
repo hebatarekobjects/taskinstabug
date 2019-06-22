@@ -4,12 +4,13 @@ class Api::V1::ApplicationsController < ApplicationController
     include Api::V1::ApplicationsHelper
 
     def list
-        @applications = Application.where({:deleted_at => nil}).paginate(page: params[:page], per_page: 10).order("applications.created_at DESC")
+        page = ((!params.has_key?:page) || params[:page].blank? || params[:page].to_s=="0")? 1 : params[:page]
+        @applications = Application.where({:deleted_at => nil}).paginate(page: page, per_page: 10).order("applications.created_at DESC")
         render json: format_list_response(@applications), :status=>200
     end
 
     def show
-        if !params.has_key? :id 
+        if ((!params.has_key? :id) || params[:id].blank?)
             render json: format_invalid_input_response, :status=>405
         else
             @application = Application.where({:token=>params[:id],:deleted_at => nil}).first
@@ -22,7 +23,7 @@ class Api::V1::ApplicationsController < ApplicationController
     end
 
     def destroy
-        if !params.has_key? :id 
+        if ((!params.has_key? :id) || params[:id].blank?)
             render json: format_invalid_input_response, :status=>405
         else
             @application = Application.where({:token=>params[:id],:deleted_at => nil}).first
@@ -38,7 +39,7 @@ class Api::V1::ApplicationsController < ApplicationController
     def new
         
         @application = Application.new
-        if !params.has_key? :client_name
+        if ((!params.has_key? :client_name) || params[:client_name].blank?)
             render json: format_invalid_input_response, :status=>405
         else 
             applications_count = Application.where({:deleted_at => nil,:client_name=>params[:client_name]}).count
@@ -52,7 +53,7 @@ class Api::V1::ApplicationsController < ApplicationController
     end
 
     def edit
-        if !params.has_key? :id 
+        if ((!params.has_key? :id) || params[:id].blank?)
             render json: format_invalid_input_response, :status=>405
         else
             @application = Application.where({:token=>params[:id],:deleted_at => nil}).first

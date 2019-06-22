@@ -4,9 +4,10 @@ class Api::V1::MessagesController < ApplicationController
 
     def list
         @chat = Chat.where({:token=>params[:chat_token]}).first
+        page = ((!params.has_key?:page) || params[:page].blank? || params[:page].to_s=="0")? 1 : params[:page]
         if !@chat.nil?
             @messages=nil
-            if params.has_key? :search_query
+            if ((params.has_key? :search_query) && (!params[:search_query].blank?))
                 Message.__elasticsearch__.create_index!
                 Message.import
                 @messages=Message.search(
@@ -30,7 +31,7 @@ class Api::V1::MessagesController < ApplicationController
                 render json: format_list_elastic_response(@messages.results), :status=>200
             else
                 where = "messages.deleted_at is ? and messages.chat_id=?"
-                @messages = Message.where(where,nil,@chat.id).paginate(page: params[:page], per_page: 10).order("messages.created_at DESC")
+                @messages = Message.where(where,nil,@chat.id).paginate(page: page, per_page: 10).order("messages.created_at DESC")
                 render json: format_list_response(@messages), :status=>200
             end
         else
@@ -39,7 +40,7 @@ class Api::V1::MessagesController < ApplicationController
     end
 
     def show
-        if !params.has_key? :id 
+        if ((!params.has_key? :id) || params[:id].blank?)
             render json: format_invalid_input_response, :status=>405
         else
             @message = Message.where({:token=>params[:id],:deleted_at => nil}).first
@@ -52,7 +53,7 @@ class Api::V1::MessagesController < ApplicationController
     end
 
     def destroy
-        if !params.has_key? :id 
+        if ((!params.has_key? :id) || params[:id].blank?)
             render json: format_invalid_input_response, :status=>405
         else
             data = {
@@ -66,13 +67,13 @@ class Api::V1::MessagesController < ApplicationController
     end
 
     def new
-        if !params.has_key? :sender_token
+        if ((!params.has_key? :sender_token) || params[:sender_token].blank?)
             render json: format_invalid_input_response, :status=>405
-        elsif !params.has_key? :receiver_token
+        elsif ((!params.has_key? :receiver_token) || params[:receiver_token].blank?)
             render json: format_invalid_input_response, :status=>405
-        elsif !params.has_key? :body
+        elsif ((!params.has_key? :body) || params[:body].blank?)
             render json: format_invalid_input_response, :status=>405
-        elsif !params.has_key? :chat_token
+        elsif ((!params.has_key? :chat_token) || params[:chat_token].blank?)
             render json: format_invalid_input_response, :status=>405
         else
             data = {
